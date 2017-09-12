@@ -1,0 +1,49 @@
+version: '3.2'
+services:
+  wordpress:
+    image: wordpress:4.8.1
+    ports:
+      - 8000:80
+    depends_on:
+      - db
+    networks:
+      - wordpress-db
+      - proxy
+    volumes:
+      - wordpress-data:/var/www/html
+    deploy:
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.port=80
+        - com.df.xForwardedProto=true
+        - com.df.servicePath=/
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    environment:
+      - WORDPRESS_DB_PASSWORD=passw0rd
+      - WORDPRESS_DB_HOST=db
+      - ServerName=wordpress.docker.usc.edu
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: passw0rd
+    networks:
+      - wordpress-db
+    volumes:
+      - wordpress-db:/var/lib/mysql
+networks:
+  wordpress-db:
+    driver: overlay
+  proxy:
+    external:
+      name: proxy
+volumes:
+  wordpress-db:
+    driver: cloudstor:aws
+  wordpress-data:
+    external: true

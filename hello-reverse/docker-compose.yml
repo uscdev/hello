@@ -1,0 +1,17 @@
+version: '3.2'
+
+services:
+  helloworld:
+    image: tutum/hello-world
+    networks:
+      - proxy
+    deploy:
+      replicas: 2
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.servicePath=/hello-world
+        - com.df.port=80
+networks:
+  proxy:
+    external: true

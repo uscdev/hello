@@ -1,0 +1,25 @@
+version: '3.1'
+services:
+  helloweb:
+    image: uscdev/hello-dcorley
+#    ports:
+#      - 4000:4000
+    networks:
+      - proxy
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.serviceDomain=hello-dcorley.docker.usc.edu
+        - com.df.httpsOnly=true
+        - com.df.port=4000
+networks:
+  proxy:
+    external:
+      name: proxy
