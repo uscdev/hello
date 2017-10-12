@@ -1,5 +1,5 @@
-#  Create a new image from the base nodejs 8.6.0 image.
-FROM node:8.6.0
+#  Create a new image from the base nodejs 8 image.
+FROM node:8
 # Create the target directory in the image
 RUN mkdir -p /usr/src/app
 # Set the created directory as the working directory
@@ -8,8 +8,6 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 # Install required dependencies
 RUN npm install
-# Install required dependencies
-# RUN npm i webpack@latest
 # Copy the client application source files. You can use .dockerignore to exlcude files. Works just as .gitignore does.
 COPY . /usr/src/app
 # Open port 4200. This is the port that our development server uses
