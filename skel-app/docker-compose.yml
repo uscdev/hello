@@ -1,0 +1,31 @@
+version : "3"
+
+services :
+  my-app:
+      image: masfaw/usc-skel-app:dev
+      networks:
+            - webnet
+      ports:
+        - 4200:4200
+      deploy:
+        replicas: 5
+        update_config:
+          parallelism: 1
+          delay: 10s
+        restart_policy:
+          condition: on-failure
+
+  visualizer:
+      image: dockersamples/visualizer:stable
+      ports:
+        - "8080:8080"
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+      deploy:
+        placement:
+          constraints: [node.role == manager]
+      networks:
+        - webnet
+networks :
+  webnet:
+
